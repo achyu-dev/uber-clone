@@ -8,7 +8,7 @@ const Layout = () => {
         <Stack.Screen name="sign-in" options={{ headerShown: false }} />
       </Stack>
   );
-}
+};
 
-export default Layout
+export default Layout;
 
