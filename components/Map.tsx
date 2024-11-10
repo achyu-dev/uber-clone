@@ -1,11 +1,14 @@
-import { calculateRegion } from "@/lib/map";
-import { useLocationStore } from "@/store";
+import { icons } from "@/constants";
+import { calculateRegion, generateMarkersFromData } from "@/lib/map";
+import { useDriverStore, useLocationStore } from "@/store";
+import { MarkerData } from "@/types/type";
+import { useEffect, useState } from "react";
 import { View, Text } from "react-native";
-import MapView, { PROVIDER_DEFAULT } from "react-native-maps";
+import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
 
-[
+const drivers = [
   {
-    id: "1",
+    driver_id: 1,
     first_name: "James",
     last_name: "Wilson",
     profile_image_url:
@@ -13,10 +16,10 @@ import MapView, { PROVIDER_DEFAULT } from "react-native-maps";
     car_image_url:
       "https://ucarecdn.com/a2dc52b2-8bf7-4e49-9a36-3ffb5229ed02/-/preview/465x466/",
     car_seats: 4,
-    rating: "4.80",
+    rating: 4.80,
   },
   {
-    id: "2",
+    driver_id: 2,
     first_name: "David",
     last_name: "Brown",
     profile_image_url:
@@ -24,10 +27,10 @@ import MapView, { PROVIDER_DEFAULT } from "react-native-maps";
     car_image_url:
       "https://ucarecdn.com/a3872f80-c094-409c-82f8-c9ff38429327/-/preview/930x932/",
     car_seats: 5,
-    rating: "4.60",
+    rating: 4.60,
   },
   {
-    id: "3",
+    driver_id: 3,
     first_name: "Michael",
     last_name: "Johnson",
     profile_image_url:
@@ -35,10 +38,10 @@ import MapView, { PROVIDER_DEFAULT } from "react-native-maps";
     car_image_url:
       "https://ucarecdn.com/289764fb-55b6-4427-b1d1-f655987b4a14/-/preview/930x932/",
     car_seats: 4,
-    rating: "4.70",
+    rating: 4.70,
   },
   {
-    id: "4",
+    driver_id: 4,
     first_name: "Robert",
     last_name: "Green",
     profile_image_url:
@@ -46,7 +49,7 @@ import MapView, { PROVIDER_DEFAULT } from "react-native-maps";
     car_image_url:
       "https://ucarecdn.com/b6fb3b55-7676-4ff3-8484-fb115e268d32/-/preview/930x932/",
     car_seats: 4,
-    rating: "4.90",
+    rating: 4.90,
   },
 ];
 
@@ -58,11 +61,29 @@ const Map = () => {
     destinationLatitude,
   } = useLocationStore();
 
+  const {selectedDriver, setDrivers} = useDriverStore();
+  const [markers, setMarkers] = useState<MarkerData[]>([]);
+
+
   const region = calculateRegion({
     userLatitude,
     userLongitude,
     destinationLatitude,
     destinationLongitude,
+  });
+
+  useEffect(() => {
+    if (Array.isArray(drivers)) {
+      if (!userLatitude || !userLongitude) return;
+
+      const newMarkers = generateMarkersFromData({
+        data: drivers,
+        userLatitude,
+        userLongitude,
+      });
+
+      setMarkers(newMarkers);
+    }
   });
 
   return (
@@ -75,7 +96,19 @@ const Map = () => {
       showsUserLocation={true}
       initialRegion={region}
       userInterfaceStyle="light"
-    ></MapView>
+    >
+      {markers.map((marker) => (
+        <Marker 
+        key={marker.id}
+        coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
+        title={marker.title}
+        image={
+         selectedDriver === marker.id ? icons.selectedMarker : icons.marker 
+        }
+        />
+      ))}
+
+    </MapView>
   );
 };
 
