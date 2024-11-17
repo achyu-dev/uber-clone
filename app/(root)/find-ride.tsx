@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import { Text, View } from "react-native";
 
 import CustomButton from "@/components/CustomButton";
-import GoogleTextInput from "@/components/GoogleTextInput";
+import GoogleTextInput from "@/components/GoogleInputText";
 import RideLayout from "@/components/RideLayout";
 import { icons } from "@/constants";
 import { useLocationStore } from "@/store";
@@ -43,7 +43,7 @@ const FindRide = () => {
 
       <CustomButton
         title="Find Now"
-        onPress={() => router.push(`/(root)/confirm-ride`)}
+        //onPress={() => router.push(`/(root)/confirm-ride`)}
         className="mt-5"
       />
     </RideLayout>
