@@ -53,6 +53,7 @@ const drivers = [
   },
 ];
 
+const [markers, setMarkers] = useState<MarkerData[]>([]);
 const Map = () => {
   const {
     userLongitude,
@@ -62,7 +63,7 @@ const Map = () => {
   } = useLocationStore();
 
   const {selectedDriver, setDrivers} = useDriverStore();
-  const [markers, setMarkers] = useState<MarkerData[]>([]);
+  
 
 
   const region = calculateRegion({
