@@ -45,7 +45,7 @@ const Layout = () => (
         alignItems: "center",
         flexDirection: "row",
         position: "absolute",
-      }
+      },
     }}
   >
     <Tabs.Screen
